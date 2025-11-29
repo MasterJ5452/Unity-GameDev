@@ -4,11 +4,25 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour
 {
     [SerializeField]
+    private GameObject _tripleShotPrefab;
+    [SerializeField]
+    private GameObject _speedBoostPrefab;
+    [SerializeField]
     private GameObject _enemyPrefab;
     [SerializeField]
     private GameObject _enemyContainer;
     [SerializeField]
-    private float _spawnTime = 5f;
+    private float _enemySpawnTime = 5f;
+    [SerializeField]
+    private float _powerupSpawnTimeMin = 3f;
+    [SerializeField]
+    private float _powerupSpawnTimeMax = 7f;
+
+    [SerializeField]
+    private GameObject[] _gameObjectPowerups;
+
+    private float randomX;
+    private float randomY;
 
     private bool _stopSpawning = false;
 
@@ -16,7 +30,8 @@ public class SpawnManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        StartCoroutine(SpawnRoutine());
+        StartCoroutine(SpawnEnemyRoutine());
+        StartCoroutine(SpawnPowerUpRoutine());
     }
 
     // Update is called once per frame
@@ -25,18 +40,30 @@ public class SpawnManager : MonoBehaviour
         
     }
 
-    IEnumerator SpawnRoutine()
+    IEnumerator SpawnEnemyRoutine()
     {       
        
         while ( !_stopSpawning)
         {
-            float randomX = Random.Range(-9.5f, 9.5f);
-            float randomY = Random.Range(7.4f, 10f);
+           randomX = Random.Range(-9.5f, 9.5f);
+           randomY = Random.Range(7.4f, 10f);
            GameObject newEnemy = Instantiate(_enemyPrefab, new Vector3(randomX, randomY, 0), Quaternion.identity);
             newEnemy.transform.parent = _enemyContainer.transform;
-            yield return new WaitForSeconds(_spawnTime);
-            if(_spawnTime > .75f) { _spawnTime -= .03f; }
+            yield return new WaitForSeconds(_enemySpawnTime);
+            if(_enemySpawnTime > .75f) { _enemySpawnTime -= .03f; }
             
+        }
+    }
+
+    IEnumerator SpawnPowerUpRoutine()
+    {
+        while (!_stopSpawning)
+        {
+        randomX = Random.Range(-9.5f, 9.5f);
+        randomY = Random.Range(7.4f, 10f);
+        yield return new WaitForSeconds(Random.Range(_powerupSpawnTimeMin,_powerupSpawnTimeMax));
+        GameObject newObject = Instantiate(_gameObjectPowerups[Random.Range(0,  _gameObjectPowerups.Length)], new Vector3(randomX,randomY,0),Quaternion.identity);
+
         }
     }
 

@@ -4,7 +4,7 @@ public class Powerup : MonoBehaviour
 {
     [SerializeField]
     private float _speed = 3f;
-
+    private Player _player;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -28,4 +28,29 @@ public class Powerup : MonoBehaviour
 
     //OnTriggerCollision
     //Only be collectable by the Player
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+       if (other.CompareTag("Player"))
+        {
+            _player = other.transform.GetComponent<Player>();
+            if(_player != null)
+            {
+                if(this.gameObject.tag == "TripleShotPowerup") 
+                { 
+                _player.TripleShotActive();                   
+                
+                }
+                if(this.gameObject.tag == "SpeedPowerup")
+                {
+                    _player.SpeedPowerupActive();
+                }
+
+
+
+            }
+
+            Destroy(this.gameObject);
+            
+        }
+    }
 }

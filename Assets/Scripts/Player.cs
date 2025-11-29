@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 
@@ -22,12 +23,25 @@ public class Player : MonoBehaviour
    private SpawnManager _spawnManager;
 
     //Bools for powerups
+        //TripleShot
     [SerializeField]
     private bool _trippleShotActive = false;
+    private Powerup _trippleShot;
+    [SerializeField]
+    private float _trippleShotCooldownTime = 5f;
+        //SpeedBoost
+    [SerializeField]
+    private bool _speedBoostActive = false;
+    private Powerup _speedBoost;
+    [SerializeField]
+    private float _speedBoostCooldownTime = 5f;
+    [SerializeField]
+    private float _speedBoostMultiplier = 2f;
 
 
-// Start is called once before the first execution of Update after the MonoBehaviour is created
-void Start()
+
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
     {
         //take curent position = new position (0, 0, 0)
         transform.position = new Vector3(0, 0, 0);
@@ -48,7 +62,8 @@ void Start()
 
         //Fires the Players laser
         if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire) { FireLaser(); }
-            
+        
+        
 
        
       
@@ -58,6 +73,8 @@ void Start()
     {
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
+
+   
 
         transform.Translate(new Vector2(horizontalInput, verticalInput) * _speed * Time.deltaTime);
         ////new Vector3(-5, 0, 0) * horizontalInput * speed * real time
@@ -132,4 +149,31 @@ void Start()
         }
     }
 
+    public void TripleShotActive()
+    {
+        _trippleShotActive = true;
+        StartCoroutine(TripleShotPowerDownRoutine());
+
+    }
+
+    IEnumerator TripleShotPowerDownRoutine()
+    {
+        yield return new WaitForSeconds(_trippleShotCooldownTime);
+        _trippleShotActive = false;
+    }
+
+    public void SpeedPowerupActive()
+    {
+        _speedBoostActive = true;
+        StartCoroutine(SpeedBoostPowerDownRoutine());
+
+    }
+
+    IEnumerator SpeedBoostPowerDownRoutine()
+    {
+        _speed *= _speedBoostMultiplier;
+        yield return new WaitForSeconds(_speedBoostCooldownTime);
+        _speed /= _speedBoostMultiplier;
+        _speedBoostActive = false;
+    }
 }
