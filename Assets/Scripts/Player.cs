@@ -16,8 +16,10 @@ public class Player : MonoBehaviour
     private float _fireRate = 0.5f;
     private float _canFire = -1f;
     
+    //Health
     [SerializeField]
     private int _lives= 3;
+    private int _shield = 0;
 
     //Communitcate with Spawn Manager
    private SpawnManager _spawnManager;
@@ -25,18 +27,25 @@ public class Player : MonoBehaviour
     //Bools for powerups
         //TripleShot
     [SerializeField]
-    private bool _trippleShotActive = false;
+    private bool _isTrippleShotActive = false;
     private Powerup _trippleShot;
     [SerializeField]
     private float _trippleShotCooldownTime = 5f;
         //SpeedBoost
     [SerializeField]
-    private bool _speedBoostActive = false;
+    private bool _isSpeedBoostActive = false;
     private Powerup _speedBoost;
     [SerializeField]
     private float _speedBoostCooldownTime = 5f;
     [SerializeField]
     private float _speedBoostMultiplier = 2f;
+        //Shield
+    [SerializeField]
+    private bool _isShieldActive = false;
+    [SerializeField]
+    private float _shieldActiveCooldownTime = 5f;
+    [SerializeField]
+    private GameObject _shieldVisualizer;
 
 
 
@@ -123,7 +132,7 @@ public class Player : MonoBehaviour
         
 
         //if space key press,
-        if (_trippleShotActive)
+        if (_isTrippleShotActive)
         {
             Instantiate(_trippleShotPrefab, transform.position, Quaternion.identity);
         }
@@ -139,6 +148,14 @@ public class Player : MonoBehaviour
 
     public void Damage()
     {
+        if (_isShieldActive)
+        {
+            _isShieldActive = false;
+            _shieldVisualizer.SetActive(false);
+            StopCoroutine(ShieldPowerDownRoutine());
+            return;
+        }
+
         _lives--;
      
         if (_lives < 1)
@@ -151,7 +168,7 @@ public class Player : MonoBehaviour
 
     public void TripleShotActive()
     {
-        _trippleShotActive = true;
+        _isTrippleShotActive = true;
         StartCoroutine(TripleShotPowerDownRoutine());
 
     }
@@ -159,21 +176,37 @@ public class Player : MonoBehaviour
     IEnumerator TripleShotPowerDownRoutine()
     {
         yield return new WaitForSeconds(_trippleShotCooldownTime);
-        _trippleShotActive = false;
+        _isTrippleShotActive = false;
     }
 
     public void SpeedPowerupActive()
     {
-        _speedBoostActive = true;
+        _isSpeedBoostActive = true; 
+        _speed *= _speedBoostMultiplier;
         StartCoroutine(SpeedBoostPowerDownRoutine());
 
     }
 
     IEnumerator SpeedBoostPowerDownRoutine()
-    {
-        _speed *= _speedBoostMultiplier;
+    {        
         yield return new WaitForSeconds(_speedBoostCooldownTime);
         _speed /= _speedBoostMultiplier;
-        _speedBoostActive = false;
+        _isSpeedBoostActive = false;
+    }
+
+    public void ShieldPowerupActive()
+    {
+        _isShieldActive = true;
+       _shieldVisualizer.SetActive(true);
+        StartCoroutine(ShieldPowerDownRoutine());
+        
+
+    }
+
+    IEnumerator ShieldPowerDownRoutine()
+    {
+        yield return new WaitForSeconds(_shieldActiveCooldownTime);
+        _isShieldActive = false;
+        _shieldVisualizer.SetActive(false);
     }
 }

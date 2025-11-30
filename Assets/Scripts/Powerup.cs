@@ -1,10 +1,18 @@
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Powerup : MonoBehaviour
 {
     [SerializeField]
     private float _speed = 3f;
     private Player _player;
+
+    //0 tripleshot //1 speed //2 shield
+    [SerializeField]
+    private int _powerUpID;
+    
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -34,18 +42,26 @@ public class Powerup : MonoBehaviour
         {
             _player = other.transform.GetComponent<Player>();
             if(_player != null)
-            {
-                if(this.gameObject.tag == "TripleShotPowerup") 
-                { 
-                _player.TripleShotActive();                   
-                
-                }
-                if(this.gameObject.tag == "SpeedPowerup")
+            {             
+
+                switch (_powerUpID)
                 {
-                    _player.SpeedPowerupActive();
+                    case 0:
+                        _player.TripleShotActive();
+                        break;
+                    case 1:
+                        _player.SpeedPowerupActive();
+                        break;
+                    case 2:
+                        _player.ShieldPowerupActive();
+                        break;
+                    default:
+                        Debug.Log("Default Value" + _powerUpID);
+                        break;
+
+
+
                 }
-
-
 
             }
 
