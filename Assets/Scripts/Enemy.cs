@@ -5,11 +5,11 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private float _speed = 4f;
 
-
+    private Player _player;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        _player = GameObject.Find("Player").GetComponent<Player>();
     }
 
     // Update is called once per frame
@@ -32,12 +32,11 @@ public class Enemy : MonoBehaviour
         Debug.Log("Hit: " + other.transform.name);
 
         //if other = Player     
-     
-       
-        if ( other.tag == "Player")
-        {       
-            //damage the Player
+
+        if (other.tag == "Player")
+        {
             Player player = other.GetComponent<Player>();
+            //damage the Player
 
             if (player != null)
             {
@@ -47,15 +46,23 @@ public class Enemy : MonoBehaviour
             //destroy Us 
             Destroy(this.gameObject);
         }
-        
+
 
         //if other = laser
-        if(other.tag == "Laser")
+        if (other.tag == "Laser")
         {
+
             //destroy laser 
             Destroy(other.gameObject);
             //destroy us
             Destroy(this.gameObject);
+
+            if (_player != null)
+            {
+                _player.addScore(10);
+
+            }
+
 
         }
 

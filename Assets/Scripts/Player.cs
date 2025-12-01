@@ -10,21 +10,27 @@ public class Player : MonoBehaviour
     private GameObject _laserPrefab;
     [SerializeField] 
     private GameObject _trippleShotPrefab;
+    [SerializeField]
+    private UI_Manager _uiManager;
+
     [SerializeField] //set a speed 
     private float _speed = 3f;
     [SerializeField]
     private float _fireRate = 0.5f;
     private float _canFire = -1f;
+
+    [SerializeField]
+    private int _score;
     
     //Health
     [SerializeField]
     private int _lives= 3;
-    private int _shield = 0;
+    //private int _shield = 0;
 
     //Communitcate with Spawn Manager
    private SpawnManager _spawnManager;
 
-    //Bools for powerups
+    //POWERUPS
         //TripleShot
     [SerializeField]
     private bool _isTrippleShotActive = false;
@@ -55,10 +61,15 @@ public class Player : MonoBehaviour
         //take curent position = new position (0, 0, 0)
         transform.position = new Vector3(0, 0, 0);
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
-        
+        _uiManager = GameObject.Find("Canvas").GetComponent<UI_Manager>();
         if(_spawnManager == null)
         {
             Debug.LogError("The Spawn Manager is NULL");
+        }
+
+        if(_uiManager == null)
+        {
+            Debug.LogError("The UI Manager is NULL");
         }
 
     }
@@ -157,10 +168,14 @@ public class Player : MonoBehaviour
         }
 
         _lives--;
+
+       _uiManager.updateLives(_lives);
      
         if (_lives < 1)
         {
             _spawnManager.OnPlayerDeath();
+
+            
 
             Destroy(this.gameObject);
         }
@@ -209,4 +224,12 @@ public class Player : MonoBehaviour
         _isShieldActive = false;
         _shieldVisualizer.SetActive(false);
     }
+
+    //method to add 10 to the score!
+    public void addScore(int points)
+    {
+        _score += points;
+        _uiManager.updateScore(_score);
+    }
+    //Communicate with UIManager to update score
 }
