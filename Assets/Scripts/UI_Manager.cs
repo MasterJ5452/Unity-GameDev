@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class UI_Manager : MonoBehaviour
 {
@@ -11,9 +12,13 @@ public class UI_Manager : MonoBehaviour
     [SerializeField]
     private Text _gameOverText;
     [SerializeField]
+    private Text _restartText;
+    [SerializeField]
     private Sprite[] _liveSprites;
+    [SerializeField]
+    private float _textFlashTime = .5f;
 
-
+    private GameManager _gameManager;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -21,6 +26,13 @@ public class UI_Manager : MonoBehaviour
 
         _scoreText.text = "Score: " + 0;
         _gameOverText.gameObject.SetActive(false);
+        _restartText.gameObject.SetActive(false); 
+        _gameManager = GameObject.Find("Game_Manager").GetComponent<GameManager>();
+
+        if( _gameManager == null)
+        {
+            Debug.LogError("Game Manager is Null");
+        }
     }
 
     // Update is called once per frame
@@ -42,12 +54,30 @@ public class UI_Manager : MonoBehaviour
         _LivesImg.sprite = _liveSprites[currentLives];
         if (currentLives == 0)
         {
-           
-                _gameOverText.gameObject.SetActive(true);
-             
+            GameOverSequence();
             
 
         }
     }
 
+    void GameOverSequence()
+    {
+        _restartText.gameObject.SetActive(true);
+        StartCoroutine(BlinkText());
+        _gameManager.GameOver();
+
+    }
+
+
+    IEnumerator BlinkText()
+    {
+        while (true)
+        {
+            _gameOverText.gameObject.SetActive(true);
+            yield return new WaitForSeconds(_textFlashTime);
+            _gameOverText.gameObject.SetActive(false);
+            yield return new WaitForSeconds(_textFlashTime);
+        }
+
+    }
 }

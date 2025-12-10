@@ -61,7 +61,7 @@ public class Player : MonoBehaviour
         //take curent position = new position (0, 0, 0)
         transform.position = new Vector3(0, 0, 0);
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
-        _uiManager = GameObject.Find("Canvas").GetComponent<UI_Manager>();
+        _uiManager = GameObject.Find("UI_Manager").GetComponent<UI_Manager>();
         if(_spawnManager == null)
         {
             Debug.LogError("The Spawn Manager is NULL");
