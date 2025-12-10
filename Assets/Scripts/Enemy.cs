@@ -6,10 +6,23 @@ public class Enemy : MonoBehaviour
     private float _speed = 4f;
 
     private Player _player;
+    private Animator _anim;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();
+        //null check player
+        if(_player == null)
+        {
+            Debug.LogError("Player object NULL");
+        }        
+        //assign the component to Anim
+        _anim = GetComponent<Animator>();
+        if(_anim == null)
+        {
+            Debug.LogError("Animator NULL");
+        }
+
     }
 
     // Update is called once per frame
@@ -42,9 +55,11 @@ public class Enemy : MonoBehaviour
             {
                 player.Damage();
             }
-
+            //trigger anim
+            _anim.SetTrigger("OnEnemyDeath");
+            _speed = 0;
             //destroy Us 
-            Destroy(this.gameObject);
+            Destroy(this.gameObject,2.8f);
         }
 
 
@@ -52,10 +67,15 @@ public class Enemy : MonoBehaviour
         if (other.tag == "Laser")
         {
 
+            
             //destroy laser 
             Destroy(other.gameObject);
+
+            //triger anim
+            _anim.SetTrigger("OnEnemyDeath");
+            _speed = 0;
             //destroy us
-            Destroy(this.gameObject);
+            Destroy(this.gameObject,2.8f);
 
             if (_player != null)
             {
