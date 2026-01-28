@@ -53,6 +53,9 @@ public class Player : MonoBehaviour
     [SerializeField]
     private GameObject _shieldVisualizer;
 
+    [SerializeField]
+    private GameObject _rightEngineDmg, _leftEngineDmg;
+   
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -161,17 +164,57 @@ public class Player : MonoBehaviour
     {
         if (_isShieldActive)
         {
+            StopCoroutine(ShieldPowerDownRoutine());
             _isShieldActive = false;
             _shieldVisualizer.SetActive(false);
-            StopCoroutine(ShieldPowerDownRoutine());
+            
             return;
         }
 
         _lives--;
 
        _uiManager.updateLives(_lives);
-     
-        if (_lives < 1)
+        
+        if (_lives == 2)
+        {
+            int rand = Random.Range(1,3);
+           
+
+            if (rand == 1) 
+            {
+                _rightEngineDmg.SetActive(true);
+
+            }
+            else if (rand == 2)
+            {
+                _leftEngineDmg.SetActive(true);
+            }
+        }
+        else if (_lives == 1)
+        {
+            int rand = Random.Range(1, 3);
+          
+            if (rand == 1 && !_rightEngineDmg.activeSelf)
+            {
+                _rightEngineDmg.SetActive(true);
+
+            }
+            else if (rand == 2 && !_leftEngineDmg.activeSelf)
+            {
+                _leftEngineDmg.SetActive(true);
+            }
+            else if (rand == 1 && _rightEngineDmg.activeSelf)
+            {
+                _leftEngineDmg.SetActive(true);
+
+            }
+            else if (rand == 2 && _leftEngineDmg.activeSelf)
+            {
+                _rightEngineDmg.SetActive(true);
+            }
+
+        }   
+        else if (_lives < 1)
         {
             _spawnManager.OnPlayerDeath();
 
