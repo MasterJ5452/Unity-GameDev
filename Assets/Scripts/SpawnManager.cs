@@ -17,6 +17,10 @@ public class SpawnManager : MonoBehaviour
     private float _powerupSpawnTimeMin = 3f;
     [SerializeField]
     private float _powerupSpawnTimeMax = 7f;
+    [SerializeField]
+    private float _enemySpawnDelay = 2f;
+    [SerializeField]
+    private float _powerupSpawnDelay = 2f;
 
     [SerializeField]
     private GameObject[] _gameObjectPowerups;
@@ -26,12 +30,11 @@ public class SpawnManager : MonoBehaviour
 
     private bool _stopSpawning = false;
 
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public void StartSpawning()
     {
         StartCoroutine(SpawnEnemyRoutine());
         StartCoroutine(SpawnPowerUpRoutine());
+
     }
 
     // Update is called once per frame
@@ -42,7 +45,7 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator SpawnEnemyRoutine()
     {
-
+        yield return new WaitForSeconds(_enemySpawnDelay);
         while (!_stopSpawning)
         {
             randomX = Random.Range(-9.5f, 9.5f);
@@ -57,6 +60,7 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator SpawnPowerUpRoutine()
     {
+        yield return new WaitForSeconds(_powerupSpawnDelay);
         while (!_stopSpawning)
         {
             randomX = Random.Range(-9.5f, 9.5f);
