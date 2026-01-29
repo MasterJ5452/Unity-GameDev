@@ -60,8 +60,7 @@ public class Player : MonoBehaviour
     // Audio
     [SerializeField]
     private AudioSource _laserAudio;
-    [SerializeField]
-    private AudioSource _explosionAudio;
+    
 
 
 
@@ -73,7 +72,7 @@ public class Player : MonoBehaviour
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         _uiManager = GameObject.Find("UI_Manager").GetComponent<UI_Manager>();
         _laserAudio = GameObject.Find("Laser_Shot").GetComponent<AudioSource>();
-        _explosionAudio = GameObject.Find("Explosion_sound").GetComponent<AudioSource>();
+        
         if(_spawnManager == null)
         {
             Debug.LogError("The Spawn Manager is NULL");
@@ -87,10 +86,7 @@ public class Player : MonoBehaviour
         {
             Debug.LogError("The Laser Audio is NULLin Audio_Manager");
         }
-        if (_explosionAudio == null)
-        {
-            Debug.LogError("The Explosion Audio is NULL in Audio_Manager");
-        }
+        
 
 
     }
@@ -237,10 +233,7 @@ public class Player : MonoBehaviour
         }   
         else if (_lives < 1)
         {
-            _spawnManager.OnPlayerDeath();
-            _explosionAudio.Play();
-
-            
+            _spawnManager.OnPlayerDeath();           
 
             Destroy(this.gameObject);
         }

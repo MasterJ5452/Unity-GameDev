@@ -25,26 +25,15 @@ public class SpawnManager : MonoBehaviour
     [SerializeField]
     private GameObject[] _gameObjectPowerups;
 
-    [SerializeField]
-
-    private AudioSource _explosionAudio;
     private float randomX;
     private float randomY;
 
     private bool _stopSpawning = false;
 
-    private void Start()
-    {
-        _explosionAudio = GameObject.Find("Explosion_sound").GetComponent<AudioSource>();
-        if (_explosionAudio == null)
-        {
-            Debug.LogError("The Explosion Audio is NULL in Audio_Manager");
-        }
-        
-    }
+   
     public void StartSpawning()
     {
-        _explosionAudio.Play();
+        
         StartCoroutine(SpawnEnemyRoutine());
         StartCoroutine(SpawnPowerUpRoutine());
     }
@@ -72,6 +61,7 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator SpawnPowerUpRoutine()
     {
+      
         yield return new WaitForSeconds(_powerupSpawnDelay);
         while (!_stopSpawning)
         {
@@ -84,7 +74,7 @@ public class SpawnManager : MonoBehaviour
 
     public void OnPlayerDeath()
     {
-        _explosionAudio.Play();
+        ;
         _stopSpawning = true;
     }
 }

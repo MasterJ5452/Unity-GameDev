@@ -9,13 +9,14 @@ public class Enemy : MonoBehaviour
     private Animator _anim;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
+   private AudioSource _audioSource;
     //Audio
-    [SerializeField]
-    private AudioSource _explosionAudio;
+    
     void Start()
     {
-        _explosionAudio = GameObject.Find("Explosion_sound").GetComponent<AudioSource>();
+        
         _player = GameObject.Find("Player").GetComponent<Player>();
+        _audioSource = GetComponent<AudioSource>();
         //null check player
         if(_player == null)
         {
@@ -27,10 +28,7 @@ public class Enemy : MonoBehaviour
         {
             Debug.LogError("Animator NULL");
         }
-        if (_explosionAudio == null)
-        {
-            Debug.LogError("The Explosion Audio is NULL in Audio_Manager");
-        }
+     
 
     }
 
@@ -68,7 +66,8 @@ public class Enemy : MonoBehaviour
             _anim.SetTrigger("OnEnemyDeath");
             _speed = 0;
             //destroy Us 
-            _explosionAudio.Play();
+            
+            _audioSource.Play();
             Destroy(this.gameObject,2.8f);
         }
 
@@ -85,9 +84,9 @@ public class Enemy : MonoBehaviour
             _anim.SetTrigger("OnEnemyDeath");
             _speed = 0;
             //destroy us
-            _explosionAudio.Play();
+            
+            _audioSource.Play();
             Destroy(this.gameObject,2.8f);
-
             if (_player != null)
             {
                 _player.addScore(10);
