@@ -55,7 +55,14 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     private GameObject _rightEngineDmg, _leftEngineDmg;
-   
+
+
+    // Audio
+    [SerializeField]
+    private AudioSource _laserAudio;
+    [SerializeField]
+    private AudioSource _explosionAudio;
+
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -65,6 +72,8 @@ public class Player : MonoBehaviour
         transform.position = new Vector3(0, 0, 0);
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         _uiManager = GameObject.Find("UI_Manager").GetComponent<UI_Manager>();
+        _laserAudio = GameObject.Find("Laser_Shot").GetComponent<AudioSource>();
+        _explosionAudio = GameObject.Find("Explosion_sound").GetComponent<AudioSource>();
         if(_spawnManager == null)
         {
             Debug.LogError("The Spawn Manager is NULL");
@@ -74,6 +83,15 @@ public class Player : MonoBehaviour
         {
             Debug.LogError("The UI Manager is NULL");
         }
+        if(_laserAudio == null)
+        {
+            Debug.LogError("The Laser Audio is NULLin Audio_Manager");
+        }
+        if (_explosionAudio == null)
+        {
+            Debug.LogError("The Explosion Audio is NULL in Audio_Manager");
+        }
+
 
     }
 
@@ -144,16 +162,19 @@ public class Player : MonoBehaviour
         //When hiting space spawn gameobject
         _canFire = Time.time + _fireRate;
         
-
+        
         //if space key press,
         if (_isTrippleShotActive)
         {
             Instantiate(_trippleShotPrefab, transform.position, Quaternion.identity);
+            
         }
         else
         {
             Instantiate(_laserPrefab, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
         }
+            _laserAudio.Play();
+
         //if tripleshotActive is true
             //fire 3 lasers (tripleshot prefab)
 
@@ -178,7 +199,7 @@ public class Player : MonoBehaviour
         if (_lives == 2)
         {
             int rand = Random.Range(1,3);
-           
+          
 
             if (rand == 1) 
             {
@@ -217,6 +238,7 @@ public class Player : MonoBehaviour
         else if (_lives < 1)
         {
             _spawnManager.OnPlayerDeath();
+            _explosionAudio.Play();
 
             
 

@@ -39,6 +39,7 @@ public class Astroid : MonoBehaviour
             GameObject newExplosion = Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
             Destroy(other.gameObject);
             _spawnManager.StartSpawning();
+            
             Destroy(this.gameObject);
             
 
