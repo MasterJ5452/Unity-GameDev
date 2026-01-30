@@ -50,6 +50,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
   _speed: 4
+  _canFire: -1
+  _fireRate: 0.05
+  _laserPrefab: {fileID: 9010354717357385069, guid: cb200f9251820e9488262f4eb3de84dd, type: 3}
+  _laserAudio: {fileID: 0}
 --- !u!212 &3913401055650280542
 SpriteRenderer:
   m_ObjectHideFlags: 0
