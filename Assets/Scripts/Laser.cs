@@ -5,7 +5,9 @@ public class Laser : MonoBehaviour
 {
     [SerializeField]
     private float _speed = 8.0f;
+    [SerializeField]
     private bool _isEnemyLaser = false;
+   
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -65,5 +67,18 @@ public class Laser : MonoBehaviour
     public void AssignEnemyLaser()
     {
         _isEnemyLaser = true;
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.tag == "Player" && _isEnemyLaser == true)
+        {
+        
+            Player player =  other.GetComponent<Player>();
+            if (player != null) 
+            {
+                player.Damage();
+            }
+        }
     }
 }

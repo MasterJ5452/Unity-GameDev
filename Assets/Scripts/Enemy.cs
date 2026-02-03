@@ -82,11 +82,11 @@ public class Enemy : MonoBehaviour
             for (int i = 0; i < lasers.Length; i++)
             {
                 lasers[i].AssignEnemyLaser();
+       
             }
             _laserAudio.Play();
             
         }
-
     }
 
     private void OnTriggerEnter2D(Collider2D other)
