@@ -6,7 +6,8 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private float _speed = 4f;
     [SerializeField]
-    private float _nextFireTime;
+    private float _fireRate = 3.0f;
+    private float _canFire = -1;
     [SerializeField]
     private GameObject _laserPrefab;
 
@@ -45,31 +46,47 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        CalculateMovment();
+        FireLaser();
+       
+    }
+
+
+    void CalculateMovment()
+    {
         //move down at 4 meters per second
         transform.Translate(Vector2.down * _speed * Time.deltaTime);
         //if bottom of screen 
         //respawn at top with a new random x position
-        
-        if(transform.position.y <= -5.4f)
+
+        if (transform.position.y <= -5.4f)
         {
             float randomX = Random.Range(-9.5f, 9.5f);
             float randomY = Random.Range(7.4f, 10f);
             transform.position = new Vector2(randomX, randomY);
         }
-
-        if(Time.time >= _nextFireTime)
-        {
-            FireLaser();
-            _nextFireTime = Time.time + Random.Range(3,8);
-        }
     }
 
 
+
     void FireLaser()
-    {      
-        Instantiate(_laserPrefab, transform.position + new Vector3(0, -1.05f, 0), Quaternion.identity);
-     
-        _laserAudio.Play();       
+    {
+
+        if (Time.time >= _canFire)
+        {
+
+            _fireRate = _fireRate + Random.Range(3f, 8f);
+            _canFire = Time.time + _fireRate;
+            GameObject enemyLaser = Instantiate(_laserPrefab, transform.position, Quaternion.identity);
+            Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
+            for (int i = 0; i < lasers.Length; i++)
+            {
+                lasers[i].AssignEnemyLaser();
+            }
+            _laserAudio.Play();
+            
+        }
+
     }
 
     private void OnTriggerEnter2D(Collider2D other)
